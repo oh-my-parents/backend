@@ -23,7 +23,7 @@ public class User {
     private Long id;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<UserQuestion> discounts = new ArrayList<>();
+    private List<UserQuestion> userQuestions = new ArrayList<>();
 
     @NotNull
     private String name;
