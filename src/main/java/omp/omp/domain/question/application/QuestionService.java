@@ -13,6 +13,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
+    @Transactional
     public Long makeQuestion(String content, int orderNumber) {
         Question question = Question.builder()
                 .content(content)
