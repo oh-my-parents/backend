@@ -13,7 +13,7 @@ public enum QuestionParentType {
     FATHER("아버지"),
     MOTHER("어머니");
 
-    private String parent;
+    private final String parent;
 
     QuestionParentType(String parent) {
         this.parent = parent;
