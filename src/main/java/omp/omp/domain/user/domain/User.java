@@ -1,8 +1,7 @@
-package omp.omp.domain.user;
+package omp.omp.domain.user.domain;
 
 import lombok.*;
-import omp.omp.domain.userquestion.UserQuestion;
-import org.hibernate.annotations.DynamicInsert;
+import omp.omp.domain.userquestion.domain.UserQuestion;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,7 +11,6 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {

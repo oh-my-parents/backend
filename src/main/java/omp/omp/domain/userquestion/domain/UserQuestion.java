@@ -1,17 +1,16 @@
-package omp.omp.domain.userquestion;
+package omp.omp.domain.userquestion.domain;
 
 import lombok.*;
-import omp.omp.domain.question.Question;
-import omp.omp.domain.user.User;
-import org.hibernate.annotations.DynamicInsert;
+import omp.omp.domain.question.domain.Question;
+import omp.omp.domain.user.domain.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
 @Getter
 @Builder
-@DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserQuestion {
@@ -28,4 +27,15 @@ public class UserQuestion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private QuestionParentType questionParentType;
+
+    @Embedded
+    private ChildAnswer childAnswer;
+
+    @Embedded
+    private ParentAnswer parentAnswer;
+
 }
