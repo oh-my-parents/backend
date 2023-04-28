@@ -39,3 +39,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.bootJar {
+	mainClass = "omp.omp.OmpApplication"
+	archiveFileName.set("omp.jar")
+}
