@@ -8,14 +8,14 @@ import lombok.Getter;
  *  MOTHER : 어머니용
  */
 @Getter
-public enum QuestionParentType {
+public enum ParentType {
 
     FATHER("아버지"),
     MOTHER("어머니");
 
     private final String parent;
 
-    QuestionParentType(String parent) {
+    ParentType(String parent) {
         this.parent = parent;
     }
 }

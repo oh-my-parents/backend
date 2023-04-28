@@ -1,7 +1,7 @@
 package omp.omp.domain.question.application;
 
 import lombok.Getter;
-import omp.omp.domain.userquestion.domain.QuestionParentType;
+import omp.omp.domain.userquestion.domain.ParentType;
 
 /**
  * 본 클래스는 질문지를 저장하기위한 곳입니다.
@@ -24,7 +24,7 @@ public enum QuestionGroup {
         this.order = order;
     }
 
-    public String getMessagePlusParentType(QuestionParentType questionParentType) {
-        return String.format(this.message, questionParentType.getParent());
+    public String getMessagePlusParentType(ParentType parentType) {
+        return String.format(this.message, parentType.getParent());
     }
 }
