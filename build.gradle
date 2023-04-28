@@ -31,9 +31,16 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.bootJar {
+	mainClass = "omp.omp.OmpApplication"
+	archiveFileName.set("omp.jar")
 }
