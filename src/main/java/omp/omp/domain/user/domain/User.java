@@ -32,15 +32,6 @@ public class User {
     @NotNull
     private String uri;
 
-
-    public boolean isMadeQuestion() {
-        return countQuestion() != 0;
-    }
-
-    public int countQuestion() {
-        return userQuestions.size();
-    }
-
     public boolean isScoreNull() {
         return userQuestions.stream()
                 .map(u -> u.getParentAnswer().getScore())

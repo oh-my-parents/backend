@@ -5,10 +5,11 @@ import omp.omp.domain.user.dao.UserRepository;
 import omp.omp.domain.user.domain.User;
 import omp.omp.domain.user.exception.UserException;
 import omp.omp.domain.user.exception.UserExceptionGroup;
+import omp.omp.domain.userquestion.domain.ParentType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,27 +18,21 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public int confirmScore(Long userId) {
+    public int confirmScore(Long userId, ParentType parentType) {
 
-        User user = userRepository.findOne(userId);
+        Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
 
-        checkUserNull(user);
-        checkMadeQuestion(user);
+        User user = checkUserNullAndGetUser(optionalUser);
         checkScoreNull(user);
 
         return user.getTotalScore();
     }
 
-    private void checkMadeQuestion(User user) {
-        if (!user.isMadeQuestion()) {
-            throw new UserException(UserExceptionGroup.USER_NO_MADE_QUESTION);
+    private User checkUserNullAndGetUser(Optional<User> user) {
+        if (user.isPresent()) {
+            return user.get();
         }
-    }
-
-    private void checkUserNull(User user) {
-        if (user == null) {
-            throw new UserException(UserExceptionGroup.USER_NULL);
-        }
+        throw new UserException(UserExceptionGroup.USER_NULL);
     }
 
     private void checkScoreNull(User user) {
