@@ -1,6 +1,7 @@
 package omp.omp.domain.question.domain;
 
 import lombok.*;
+import omp.omp.domain.userquestion.domain.ParentType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,4 +23,8 @@ public class Question {
 
     @NotNull
     private int orderNumber;
+
+    public String plusParentType(ParentType parentType) {
+        return String.format(this.content, parentType.getParent());
+    }
 }
