@@ -30,7 +30,7 @@ public class UserQuestion {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private QuestionParentType questionParentType;
+    private ParentType parentType;
 
     @Embedded
     private ChildAnswer childAnswer;
