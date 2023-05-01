@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("K")

@@ -3,6 +3,8 @@ package omp.omp.domain.user.application;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
+import omp.omp.domain.user.exception.KakaoUserException;
+import omp.omp.domain.user.exception.KakaoUserExceptionGroup;
 import omp.omp.domain.user.exception.UserException;
 import omp.omp.domain.user.exception.UserExceptionGroup;
 import org.springframework.stereotype.Service;
@@ -13,14 +15,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class KakaoUserService {
 
-    public void signIn(String token) {
+    private Map kakaoSignIn(String token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
+        Map kakaoResponse = new HashMap<String, String>();
 
         try {
             URL url = new URL(reqURL);
@@ -33,7 +38,7 @@ public class KakaoUserService {
             int responseCode = conn.getResponseCode();
 
             if (responseCode != 200) {
-                throw new UserException(UserExceptionGroup.USER_NULL);
+                throw new KakaoUserException(KakaoUserExceptionGroup.KAKAO_USER_NULL);
             }
 
             System.out.println("responseCode: " + responseCode);
@@ -50,14 +55,17 @@ public class KakaoUserService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            String id = element.getAsJsonObject().get("id").getAsString();
+            String kakaoId = element.getAsJsonObject().get("id").getAsString();
             String nickname = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
 
             if (nickname == null || nickname.isEmpty()) {
-                throw new UserException(UserExceptionGroup.USER_NULL);
+                throw new KakaoUserException(KakaoUserExceptionGroup.KAKAO_USER_NICKNAME_NULL);
             }
 
-            System.out.println("id: " + id);
+            kakaoResponse.put("kakaoId", kakaoId);
+            kakaoResponse.put("nickname", nickname);
+
+            System.out.println("kakaoId: " + kakaoId);
             System.out.println("nickname: " + nickname);
 
             br.close();
@@ -65,6 +73,7 @@ public class KakaoUserService {
             e.printStackTrace();
         }
 
+        return kakaoResponse;
     }
 
 }

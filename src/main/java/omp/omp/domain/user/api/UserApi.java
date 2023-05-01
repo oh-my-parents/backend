@@ -8,6 +8,8 @@ import omp.omp.domain.user.dto.UserScoreResponse;
 import omp.omp.global.util.Result;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 public class UserApi {
@@ -23,8 +25,8 @@ public class UserApi {
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userScoreResponse);
     }
 
-    @PostMapping("/api/v1/auth")
+    @PostMapping("/api/v1/auth/kakao")
     public void kakaoAuth(@RequestParam("token") String token) {
-        kakaoUserService.signIn(token);
+        kakaoUserService.kakaoSignIn(token);
     }
 }
