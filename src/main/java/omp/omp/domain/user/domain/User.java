@@ -2,6 +2,7 @@ package omp.omp.domain.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import omp.omp.domain.userquestion.domain.UserQuestion;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

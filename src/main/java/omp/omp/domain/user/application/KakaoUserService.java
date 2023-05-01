@@ -3,6 +3,9 @@ package omp.omp.domain.user.application;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
+import omp.omp.domain.user.dao.UserRepository;
+import omp.omp.domain.user.domain.KakaoUser;
+import omp.omp.domain.user.domain.User;
 import omp.omp.domain.user.exception.KakaoUserException;
 import omp.omp.domain.user.exception.KakaoUserExceptionGroup;
 import omp.omp.domain.user.exception.UserException;
@@ -22,6 +25,17 @@ import java.util.Map;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class KakaoUserService {
+
+    private final UserRepository userRepository;
+
+    private Long signUpByKakao(Map<String, String> kakaoResponse) {
+        KakaoUser kakaoUser = KakaoUser.builder()
+                .name(kakaoResponse.get("nickname"))
+                .kakaoId(kakaoResponse.get("kakaoId"))
+                .build();
+        userRepository.save(kakaoUser);
+        return kakaoUser.getId();
+    }
 
     private Map kakaoSignIn(String token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";

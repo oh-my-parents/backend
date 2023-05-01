@@ -1,6 +1,7 @@
 package omp.omp.domain.user.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("K")
+@SuperBuilder
 public class KakaoUser extends User {
     @NotNull
     private String kakaoId; //kakao 로그인을 할 때 넘겨받는 kakao 자체의 Id 값을 저장
