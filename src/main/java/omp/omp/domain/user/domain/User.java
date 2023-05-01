@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Getter
-@SuperBuilder
+@SuperBuilder   //상속 관계인 KakaoUser에서도 Builder 패턴을 사용하기 위해 SuperBuilder로 변경
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

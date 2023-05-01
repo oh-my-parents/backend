@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("K")
-@SuperBuilder
+@SuperBuilder   //상속 관계인 KakaoUser에서도 Builder 패턴을 사용하기 위해 SuperBuilder로 변경
 public class KakaoUser extends User {
     @NotNull
     private String kakaoId; //kakao 로그인을 할 때 넘겨받는 kakao 자체의 Id 값을 저장

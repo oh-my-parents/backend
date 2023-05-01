@@ -1,6 +1,7 @@
 package omp.omp.domain.user.dao;
 
 import lombok.RequiredArgsConstructor;
+import omp.omp.domain.user.domain.KakaoUser;
 import omp.omp.domain.user.domain.User;
 import omp.omp.domain.userquestion.domain.ParentType;
 import org.springframework.stereotype.Repository;
@@ -33,5 +34,11 @@ public class UserRepository {
                 .getResultList();
 
         return result.stream().findAny();
+    }
+
+    public List<KakaoUser> findByKakaoId(String kakaoId) {   //LoginId를 통해 모든 Customer 조회
+        return em.createQuery("select k from KakaoUser k where k.kakaoId = :kakaoId", KakaoUser.class)    //:loginId라고 하여 밑에서 setParameter를 통해 "loginId"의 value와 바인딩
+                .setParameter("kakaoId", kakaoId)   //위에 있는 :loginId가 여기 파리미터의 Key값과 바인딩 되어서 value가 위로 넘어가게 됌
+                .getResultList();
     }
 }
