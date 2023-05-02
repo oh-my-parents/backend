@@ -38,4 +38,25 @@ public class UserQuestion {
     @Embedded
     private ParentAnswer parentAnswer;
 
+    // 연관관계 메소드
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public static UserQuestion createUserQuestion(String answer, ParentType parentType, Question question, User user) {
+
+        UserQuestion userQuestion = UserQuestion.builder()
+                .question(question)
+                .user(user)
+                .parentType(parentType)
+                .childAnswer(new ChildAnswer(answer))
+                .build();
+
+        user.getUserQuestions().add(userQuestion);
+        return userQuestion;
+    }
+
+    public void updateUserQuestionWithChildAnswer(String answer) {
+        this.childAnswer = new ChildAnswer(answer);
+    }
 }
