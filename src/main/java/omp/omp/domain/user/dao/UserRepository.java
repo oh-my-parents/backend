@@ -15,15 +15,19 @@ public class UserRepository {
 
     private final EntityManager em;
 
-    public User findOne(Long id) {
-        return em.find(User.class, id);
+    public void sava(User user) {
+        em.persist(user);
+    }
+
+    public Optional<User> findOne(Long id) {
+        return Optional.ofNullable(em.find(User.class, id));
     }
 
     public Optional<User> findByParentType(Long id, ParentType parentType) {
         List<User> result = em.createQuery("select u from User u" +
-                        " join fetch u.userQuestions uq" +
-                        " where u.id = :id" +
-                        " and uq.parentType = :parentType", User.class)
+                        " left join u.userQuestions uq" +
+                        " on uq.parentType = :parentType" +
+                        " where u.id = :id", User.class)
                 .setParameter("id", id)
                 .setParameter("parentType", parentType)
                 .getResultList();
