@@ -2,6 +2,7 @@ package omp.omp.domain.user.api;
 
 import lombok.RequiredArgsConstructor;
 import omp.omp.domain.user.application.UserService;
+import omp.omp.domain.user.dto.UserChildAnswerRequest;
 import omp.omp.domain.user.dto.UserScoreRequest;
 import omp.omp.domain.user.dto.UserScoreResponse;
 import omp.omp.global.util.Result;
@@ -19,5 +20,12 @@ public class UserApi {
 
         UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(id, userScoreRequest.getParentType()));
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userScoreResponse);
+    }
+
+    @PostMapping("/api/v1/child/question")
+    public Result<Long> saveChildAnswer(@RequestBody UserChildAnswerRequest userChildAnswerRequest) {
+
+        Long resultId = userService.saveChildAnswer(userChildAnswerRequest.getId(), userChildAnswerRequest.getParentType(), userChildAnswerRequest.getUserChildAnswer());
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, resultId);
     }
 }
