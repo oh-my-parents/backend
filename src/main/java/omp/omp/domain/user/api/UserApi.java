@@ -13,11 +13,10 @@ public class UserApi {
 
     private final UserService userService;
 
-    @PostMapping("/api/v1/user/score/{id}")
-    public Result<UserScoreResponse> confirmScore(@PathVariable("id") Long id,
-                                                  UserScoreRequest userScoreRequest) {
+    @PostMapping("/api/v1/user/score")
+    public Result<UserScoreResponse> confirmScore(@RequestBody UserScoreRequest userScoreRequest) {
 
-        UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(id, userScoreRequest.getParentType()));
+        UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(userScoreRequest.getId(), userScoreRequest.getParentType()));
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userScoreResponse);
     }
 }
