@@ -37,8 +37,22 @@ public class KakaoUserService {
         //그러므로 signInByKakao에서 해줘야 될 것은 기가입자인지 아닌지만 판별하고 기가입자면 새로 디비에 회원가입을 하지 말고 JWT 토큰만 재발행해주고
         //기존의 가입자가 아니라면 회원가입 및 JWT 토큰 발행을 모두 해줘야한다. 카카오 아이디 없으면 signUpByKakao 호출하면 된다.
 
-        Map kakaoResponse = kakaoSignIn(token);
+        //참고로 JWT 핸드 셰이킹을 위해 클라쪽으로 response를 줄 때 refreshToken은 http only cookie로 제공하며
+        // accessToken은 response body로 제공하기로 인터페이스를 맞췄다. 이때 각 토큰의 payload는 토큰 만료시간과 User의 id를 담기로 함.
 
+        Map<String, String> kakaoResponse = kakaoSignIn(token);
+        Long idByKakao = isDuplicatedKakaoUser(kakaoResponse.get("kakaoId"));   //기존 카카오로 가입한 회원인지 검사 후 기존 가입자면 User의 id값 리턴
+        //신규 회원이면 null 리턴
+
+        if (idByKakao != null) {
+            //이미 카카오를 통해 회원가입을한 유저인 경우, 새롭게 로그인하는 것이므로 JWT를 새로 발급!
+            //여기선 idByKakao가 db에 이미 존재하는 User의 id이다.
+        } else {
+            //카카오를 통해 처음 회원가입하는 유저인 경우, 회원가입 로직 진행 후 JWT 발급!
+            Long id = signUpByKakao(kakaoResponse);
+            //위 id가 방금 회원가입하고 나서 얻은 User의 id이다.
+
+        }
 
     }
 
@@ -104,12 +118,12 @@ public class KakaoUserService {
         return kakaoResponse;
     }
 
-    private boolean isDuplicatedKakaoUser(KakaoUser kakaoUser) {
-        List<KakaoUser> findKakaoUsers = userRepository.findByKakaoId(kakaoUser.getKakaoId());
+    private Long isDuplicatedKakaoUser(String kakaoId) {
+        List<KakaoUser> findKakaoUsers = userRepository.findByKakaoId(kakaoId);
         if (!findKakaoUsers.isEmpty()) {
-            return true;
+            return findKakaoUsers.get(0).getId();
         } else{
-            return false;
+            return null;
         }
     }
 
