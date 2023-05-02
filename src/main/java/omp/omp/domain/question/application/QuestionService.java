@@ -19,10 +19,10 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
 
     @Transactional
-    public Long makeQuestion(String content, int orderNumber) {
+    public Long makeQuestion(String content, Long orderNumber) {
         Question question = Question.builder()
                 .content(content)
-                .orderNumber(orderNumber)
+                .id(orderNumber)
                 .build();
 
         questionRepository.save(question);
@@ -31,17 +31,22 @@ public class QuestionService {
     }
 
     public List<String> findQuestionContentsWithParent(ParentType parentType) {
-        List<Question> questions = questionRepository.findAll();
-
-        sortQuestionByOrder(questions);
+        List<Question> questions = findSortedQuestion();
 
         return questions.stream()
                 .map(m -> m.plusParentType(parentType))
                 .collect(Collectors.toList());
     }
 
-    private void sortQuestionByOrder(List<Question> questions) {
-        questions.sort(Comparator.comparingInt(Question::getOrderNumber));
+    public List<Question> findSortedQuestion() {
+        List<Question> questions = questionRepository.findAll();
+
+        sortQuestionByOrder(questions);
+
+        return questions;
     }
 
+    private void sortQuestionByOrder(List<Question> questions) {
+        questions.sort(Comparator.comparingLong(Question::getId));
+    }
 }
