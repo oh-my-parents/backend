@@ -7,6 +7,7 @@ import omp.omp.domain.userquestion.domain.ParentType;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,5 +41,14 @@ public class UserRepository {
         return em.createQuery("select k from KakaoUser k where k.kakaoId = :kakaoId", KakaoUser.class)    //:loginId라고 하여 밑에서 setParameter를 통해 "loginId"의 value와 바인딩
                 .setParameter("kakaoId", kakaoId)   //위에 있는 :loginId가 여기 파리미터의 Key값과 바인딩 되어서 value가 위로 넘어가게 됌
                 .getResultList();
+    }
+
+    public Optional<User> findById(String username) {
+        List<User> result = em.createQuery("select u from User u" +
+                        " where u.id = :username", User.class)
+                .setParameter("username", username)
+                .getResultList();
+
+        return result.stream().findAny();
     }
 }

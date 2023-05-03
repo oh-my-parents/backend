@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import omp.omp.domain.userquestion.domain.UserQuestion;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -20,12 +22,15 @@ import java.util.Objects;
 //추후 확장성 고려 및 객체 간 응집력을 높이기 위해 Kakao를 별도로 나눠봤습니다.
 //상속을 하려면 상속 관계 전략을 부모 클래스에 반드시 잡아줘야 한다. JOINED는 가장 정규화된 상태로 하는 것, SINGLE_TABLE은 한 테이블에 다 합치는 거, TABLE_PER_CLASS 는 클래스 별로 테이블 나누는 것
 @DiscriminatorColumn(name = "dtype") //싱글 테이블 전략이다 보니까 서로 다른 소셜 로그인끼리 구분할 수 있게 컬럼을 만들어주는 것
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue
     @Column(name = "user_id")
-    private Long id;
+    private String id;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -47,5 +52,43 @@ public class User {
         return userQuestions.stream()
                 .mapToInt(u -> u.getParentAnswer().getScore())
                 .sum();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return this.roles.stream()
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getUsername() {
+        return id;
+    }
+
+    @Override
+    public String getPassword() {
+        return id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
