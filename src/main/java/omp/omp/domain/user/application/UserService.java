@@ -5,11 +5,16 @@ import omp.omp.domain.question.application.QuestionService;
 import omp.omp.domain.question.domain.Question;
 import omp.omp.domain.user.dao.UserRepository;
 import omp.omp.domain.user.domain.User;
+import omp.omp.domain.user.dto.TokenResponse;
 import omp.omp.domain.user.dto.UserChildAnswer;
 import omp.omp.domain.user.dto.UserParentAnswer;
 import omp.omp.domain.user.exception.UserException;
 import omp.omp.domain.user.exception.UserExceptionGroup;
+import omp.omp.domain.user.jwt.JwtTokenProvider;
 import omp.omp.domain.userquestion.domain.ParentType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import omp.omp.domain.userquestion.domain.UserQuestion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +28,9 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
     private final QuestionService questionService;
-
 
     public int confirmScore(Long userId, ParentType parentType) {
 
@@ -64,6 +70,22 @@ public class UserService {
         }
     }
 
+//    @Transactional
+//    public TokenResponse signIn(String id, String password) {
+//        // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
+//        // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
+//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
+//
+//        // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
+//        // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
+//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//
+//        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+//        TokenResponse tokenInfo = jwtTokenProvider.generateToken(authentication);
+//
+//        return tokenInfo;
+//    }
+
     private void checkMadeQuestion(User user) {
         if (!user.isMadeUserQuestion()) {
             throw new UserException(UserExceptionGroup.USER_QUESTION_NULL);
@@ -71,7 +93,7 @@ public class UserService {
     }
 
     @Transactional
-    public Long saveChildAnswer(Long userId, ParentType parentType, List<UserChildAnswer> userChildAnswers) {
+    public String  saveChildAnswer(Long userId, ParentType parentType, List<UserChildAnswer> userChildAnswers) {
 
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
@@ -112,7 +134,7 @@ public class UserService {
     }
 
     @Transactional
-    public Long saveParentAnswer(Long userId, ParentType parentType, List<UserParentAnswer> userParentAnswers) {
+    public String saveParentAnswer(Long userId, ParentType parentType, List<UserParentAnswer> userParentAnswers) {
 
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
@@ -132,4 +154,5 @@ public class UserService {
             userQuestionByQuestionId.updateUserQuestionWithParentAnswer(userParentAnswer.getScore());
         }
     }
+
 }

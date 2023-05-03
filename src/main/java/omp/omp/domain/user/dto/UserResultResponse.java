@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 @Data
 public class UserResultResponse {
 
-    private Long id;
+    private String id;
 
     private List<UserResult> userResults;
 
