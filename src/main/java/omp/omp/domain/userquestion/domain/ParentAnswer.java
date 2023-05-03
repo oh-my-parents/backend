@@ -25,4 +25,8 @@ public class ParentAnswer {
      * 이 방법이 아닌 다른 방법을 원한다면 채점을 했을때 안했을때의 상태를 검사하는 Status 클래스를 사용할 수 있습니다.
      */
     private Integer score;
+
+    public ParentAnswer(Integer score) {
+        this.score = score;
+    }
 }

@@ -6,15 +6,15 @@ import omp.omp.domain.userquestion.domain.ParentType;
 import java.util.List;
 
 @Data
-public class UserChildAnswerRequest {
+public class UserParentAnswerRequest {
 
     Long id;
     ParentType parentType;
-    List<UserChildAnswer> userChildAnswers;
+    List<UserParentAnswer> userParentAnswers;
 
-    public UserChildAnswerRequest(Long id, ParentType parentType, List<UserChildAnswer> userChildAnswers) {
+    public UserParentAnswerRequest(Long id, ParentType parentType, List<UserParentAnswer> userParentAnswers) {
         this.id = id;
         this.parentType = parentType;
-        this.userChildAnswers = userChildAnswers;
+        this.userParentAnswers = userParentAnswers;
     }
 }

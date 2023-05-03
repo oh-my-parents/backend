@@ -6,6 +6,7 @@ import omp.omp.domain.question.domain.Question;
 import omp.omp.domain.user.dao.UserRepository;
 import omp.omp.domain.user.domain.User;
 import omp.omp.domain.user.dto.UserChildAnswer;
+import omp.omp.domain.user.dto.UserParentAnswer;
 import omp.omp.domain.user.exception.UserException;
 import omp.omp.domain.user.exception.UserExceptionGroup;
 import omp.omp.domain.userquestion.domain.ParentType;
@@ -61,21 +62,17 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
 
-
-        List<Question> questions = questionService.findSortedQuestion();
-
-        List<UserQuestion> userQuestions = user.getUserQuestions();
-
         if (user.isMadeUserQuestion()) {
-            updateUserQuestion(userChildAnswers, user, questions);
+            updateUserQuestionWithChildAnswer(userChildAnswers, user);
         } else {
-            createUserQuestion(parentType, userChildAnswers, user, questions, userQuestions);
+            List<Question> questions = questionService.findSortedQuestion();
+            createUserQuestionWithChildAnswer(parentType, userChildAnswers, user, questions, user.getUserQuestions());
         }
 
         return user.getId();
     }
 
-    private void createUserQuestion(ParentType parentType, List<UserChildAnswer> userChildAnswers, User user, List<Question> questions, List<UserQuestion> userQuestions) {
+    private void createUserQuestionWithChildAnswer(ParentType parentType, List<UserChildAnswer> userChildAnswers, User user, List<Question> questions, List<UserQuestion> userQuestions) {
         // UserQuestion 생성
         for (UserChildAnswer userChildAnswer : userChildAnswers) {
             Question question = QuestionMatchedNumber(questions, userChildAnswer);
@@ -84,12 +81,12 @@ public class UserService {
         }
     }
 
-    private void updateUserQuestion(List<UserChildAnswer> userChildAnswers, User user, List<Question> questions) {
+    private void updateUserQuestionWithChildAnswer(List<UserChildAnswer> userChildAnswers, User user) {
         // UserQuestion 업데이트
         for (UserChildAnswer userChildAnswer : userChildAnswers) {
-            Question question = QuestionMatchedNumber(questions, userChildAnswer);
 
-            user.findUserQuestionByQuestionId(question.getId()).updateUserQuestionWithChildAnswer(userChildAnswer.getAnswer());
+            UserQuestion userQuestionByQuestionId = user.findUserQuestionByQuestionId((long) userChildAnswer.getNumber());
+            userQuestionByQuestionId.updateUserQuestionWithChildAnswer(userChildAnswer.getAnswer());
         }
     }
 
@@ -98,6 +95,28 @@ public class UserService {
                 .filter(q -> q.getId() == userChildAnswer.getNumber())
                 .findFirst()
                 .orElseThrow(() -> new UserException(UserExceptionGroup.USER_QUESTION_NULL));
+    }
+
+    @Transactional
+    public Long saveParentAnswer(Long userId, ParentType parentType, List<UserParentAnswer> userParentAnswers) {
+
+        Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
+        User user = checkUserNullAndGetUser(optionalUser);
+
+        if (user.isMadeUserQuestion()) {
+            updateUserQuestionWithParentAnswer(userParentAnswers, user);
+        }
+
+        return user.getId();
+    }
+
+    private void updateUserQuestionWithParentAnswer(List<UserParentAnswer> userParentAnswers, User user) {
+        // UserQuestion 업데이트
+        for (UserParentAnswer userParentAnswer : userParentAnswers) {
+
+            UserQuestion userQuestionByQuestionId = user.findUserQuestionByQuestionId((long) userParentAnswer.getNumber());
+            userQuestionByQuestionId.updateUserQuestionWithParentAnswer(userParentAnswer.getScore());
+        }
     }
 
 }
