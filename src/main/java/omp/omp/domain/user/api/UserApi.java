@@ -3,6 +3,7 @@ package omp.omp.domain.user.api;
 import lombok.RequiredArgsConstructor;
 import omp.omp.domain.user.application.KakaoUserService;
 import omp.omp.domain.user.application.UserService;
+import omp.omp.domain.user.domain.User;
 import omp.omp.domain.user.dto.*;
 import omp.omp.global.util.Result;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +17,10 @@ public class UserApi {
     private final UserService userService;
     private final KakaoUserService kakaoUserService;
 
-    @PostMapping("/api/v1/user/score/{id}")
-    public Result<UserScoreResponse> confirmScore(@PathVariable("id") Long id,
-                                                  UserScoreRequest userScoreRequest) {
+    @PostMapping("/api/v1/user/score")
+    public Result<UserScoreResponse> confirmScore(@RequestBody UserScoreRequest userScoreRequest) {
 
-        UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(id, userScoreRequest.getParentType()));
+        UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(userScoreRequest.getId(), userScoreRequest.getParentType()));
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userScoreResponse);
     }
 
@@ -46,5 +46,28 @@ public class UserApi {
     @PostMapping("/test2")
     public String test2() {
         return "success2";
+    }
+
+    @PostMapping("/api/v1/user/result")
+    public Result<UserResultResponse> confirmResult(@RequestBody UserResultRequest userResultRequest) {
+
+        User user = userService.confirmResult(userResultRequest.getId(), userResultRequest.getParentType());
+
+        UserResultResponse userResultResponse = new UserResultResponse(user);
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userResultResponse);
+    }
+
+    @PostMapping("/api/v1/child/answer")
+    public Result<String> saveChildAnswer(@RequestBody UserChildAnswerRequest userChildAnswerRequest) {
+
+        String resultId = userService.saveChildAnswer(userChildAnswerRequest.getId(), userChildAnswerRequest.getParentType(), userChildAnswerRequest.getUserChildAnswers());
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, resultId);
+    }
+
+    @PostMapping("/api/v1/parent/answer")
+    public Result<String> saveParentAnswer(@RequestBody UserParentAnswerRequest userParentAnswerRequest) {
+
+        String resultId = userService.saveParentAnswer(userParentAnswerRequest.getId(), userParentAnswerRequest.getParentType(), userParentAnswerRequest.getUserParentAnswers());
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, resultId);
     }
 }

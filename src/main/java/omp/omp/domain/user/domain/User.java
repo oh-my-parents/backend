@@ -3,6 +3,8 @@ package omp.omp.domain.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import omp.omp.domain.user.exception.UserException;
+import omp.omp.domain.user.exception.UserExceptionGroup;
 import omp.omp.domain.userquestion.domain.UserQuestion;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,6 +46,12 @@ public class User implements UserDetails {
 //    @NotNull
 
     private String uri;
+
+    public boolean isParentAnswerNull() {
+        return userQuestions.stream()
+                .map(UserQuestion::getParentAnswer)
+                .anyMatch(Objects::isNull);
+    }
 
     public boolean isScoreNull() {
         return userQuestions.stream()
@@ -94,4 +102,16 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public boolean isMadeUserQuestion() {
+        return userQuestions.size() != 0;
+    }
+
+    public UserQuestion findUserQuestionByQuestionId(Long id) {
+        return userQuestions.stream()
+                .filter(uq -> uq.getQuestion().getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new UserException(UserExceptionGroup.USER_QUESTION_NULL));
+    }
+
 }

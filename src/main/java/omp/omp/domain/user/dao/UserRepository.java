@@ -28,9 +28,9 @@ public class UserRepository {
 
     public Optional<User> findByParentType(Long id, ParentType parentType) {
         List<User> result = em.createQuery("select u from User u" +
-                        " join fetch u.userQuestions uq" +
-                        " where u.id = :id" +
-                        " and uq.parentType = :parentType", User.class)
+                        " left join u.userQuestions uq" +
+                        " on uq.parentType = :parentType" +
+                        " where u.id = :id", User.class)
                 .setParameter("id", id)
                 .setParameter("parentType", parentType)
                 .getResultList();
