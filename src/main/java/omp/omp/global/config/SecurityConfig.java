@@ -30,6 +30,10 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/api/v1/auth/kakao").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
