@@ -7,6 +7,7 @@ import omp.omp.domain.userquestion.domain.ParentType;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,6 @@ public class UserRepository {
                         " where u.id = :username", User.class)
                 .setParameter("username", username)
                 .getResultList();
-
         return result.stream().findAny();
     }
 }

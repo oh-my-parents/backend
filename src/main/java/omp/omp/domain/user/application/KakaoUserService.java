@@ -6,10 +6,15 @@ import lombok.RequiredArgsConstructor;
 import omp.omp.domain.user.dao.UserRepository;
 import omp.omp.domain.user.domain.KakaoUser;
 import omp.omp.domain.user.domain.User;
+import omp.omp.domain.user.dto.TokenResponse;
 import omp.omp.domain.user.exception.KakaoUserException;
 import omp.omp.domain.user.exception.KakaoUserExceptionGroup;
 import omp.omp.domain.user.exception.UserException;
 import omp.omp.domain.user.exception.UserExceptionGroup;
+import omp.omp.domain.user.jwt.JwtTokenProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,9 +31,11 @@ import java.util.Map;
 public class KakaoUserService {
 
     private final UserRepository userRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public void signInByKakao(String token) {
+    public TokenResponse signInByKakao(String token) {
         //무엇보다 가장 먼저 kakaoSignIn 실시! ??? 어라 이상하다 우리 처음에 JWT 토큰 가지고 있어서 자동 로그인 기능이랑 어떻게 구분하지?? 고민에 빠졌었다
         //하지만 signInByKakao()가 호출된다는 것, 즉 프론트엔드 기준으로 카카오 로그인 페이지가 뜬다는 것은 기존 가입한 회원이라고 하더라도
         //JWT 토큰이 비정상적이거나 만료되었다는 것을 의미한다. 왜냐하면 JWT가 유효하다면 로그인 페이지로 리다이렉션 될리가 없기 때문이다.
@@ -39,33 +44,61 @@ public class KakaoUserService {
 
         //참고로 JWT 핸드 셰이킹을 위해 클라쪽으로 response를 줄 때 refreshToken은 http only cookie로 제공하며
         // accessToken은 response body로 제공하기로 인터페이스를 맞췄다. 이때 각 토큰의 payload는 토큰 만료시간과 User의 id를 담기로 함.
-
         Map<String, String> kakaoResponse = kakaoSignIn(token);
         String idByKakao = isDuplicatedKakaoUser(kakaoResponse.get("kakaoId"));   //기존 카카오로 가입한 회원인지 검사 후 기존 가입자면 User의 id값 리턴
         //신규 회원이면 null 리턴
-
         if (idByKakao != null) {
             //이미 카카오를 통해 회원가입을한 유저인 경우, 새롭게 로그인하는 것이므로 JWT를 새로 발급!
             //여기선 idByKakao가 db에 이미 존재하는 User의 id이다.
+
+            // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
+            // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(idByKakao, idByKakao);
+
+            // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
+            // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+            TokenResponse tokenResponse = jwtTokenProvider.generateToken(authentication);
+
+            return tokenResponse;
+
         } else {
             //카카오를 통해 처음 회원가입하는 유저인 경우, 회원가입 로직 진행 후 JWT 발급!
             String id = signUpByKakao(kakaoResponse);
+            System.out.println(id);
             //위 id가 방금 회원가입하고 나서 얻은 User의 id이다.
 
+            // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
+            // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, id);
+            // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
+            // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+            TokenResponse tokenResponse = jwtTokenProvider.generateToken(authentication);
+
+            return tokenResponse;
         }
 
     }
 
-    private String signUpByKakao(Map<String, String> kakaoResponse) {
+    @Transactional
+    public String signUpByKakao(Map<String, String> kakaoResponse) {
         KakaoUser kakaoUser = KakaoUser.builder()
                 .name(kakaoResponse.get("nickname"))
                 .kakaoId(kakaoResponse.get("kakaoId"))
+                .roles(Collections.emptyList())
                 .build();
+
         userRepository.save(kakaoUser);
+
         return kakaoUser.getId();
     }
 
-    private Map kakaoSignIn(String token) { //전달 받은 kakao AccessToken을 가지고 카카오 서버를 거쳐 kakaoId와 nickname을 얻어온다
+    public Map kakaoSignIn(String token) { //전달 받은 kakao AccessToken을 가지고 카카오 서버를 거쳐 kakaoId와 nickname을 얻어온다
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         Map kakaoResponse = new HashMap<String, String>();
 

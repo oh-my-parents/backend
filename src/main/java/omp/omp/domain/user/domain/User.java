@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import omp.omp.domain.userquestion.domain.UserQuestion;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +26,8 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Column(name = "user_id")
     private String id;
 
@@ -39,7 +41,8 @@ public class User implements UserDetails {
     @NotNull
     private String name;
 
-    @NotNull
+//    @NotNull
+
     private String uri;
 
     public boolean isScoreNull() {
