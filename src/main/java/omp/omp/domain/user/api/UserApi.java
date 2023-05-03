@@ -3,6 +3,7 @@ package omp.omp.domain.user.api;
 import lombok.RequiredArgsConstructor;
 import omp.omp.domain.user.application.UserService;
 import omp.omp.domain.user.dto.UserChildAnswerRequest;
+import omp.omp.domain.user.dto.UserParentAnswerRequest;
 import omp.omp.domain.user.dto.UserScoreRequest;
 import omp.omp.domain.user.dto.UserScoreResponse;
 import omp.omp.global.util.Result;
@@ -21,10 +22,17 @@ public class UserApi {
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userScoreResponse);
     }
 
-    @PostMapping("/api/v1/child/question")
+    @PostMapping("/api/v1/child/answer")
     public Result<Long> saveChildAnswer(@RequestBody UserChildAnswerRequest userChildAnswerRequest) {
 
-        Long resultId = userService.saveChildAnswer(userChildAnswerRequest.getId(), userChildAnswerRequest.getParentType(), userChildAnswerRequest.getUserChildAnswer());
+        Long resultId = userService.saveChildAnswer(userChildAnswerRequest.getId(), userChildAnswerRequest.getParentType(), userChildAnswerRequest.getUserChildAnswers());
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, resultId);
+    }
+
+    @PostMapping("/api/v1/parent/answer")
+    public Result<Long> saveParentAnswer(@RequestBody UserParentAnswerRequest userParentAnswerRequest) {
+
+        Long resultId = userService.saveParentAnswer(userParentAnswerRequest.getId(), userParentAnswerRequest.getParentType(), userParentAnswerRequest.getUserParentAnswers());
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, resultId);
     }
 }
