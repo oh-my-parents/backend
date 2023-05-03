@@ -10,11 +10,11 @@ public class UserChildAnswerRequest {
 
     Long id;
     ParentType parentType;
-    List<UserChildAnswer> userChildAnswer;
+    List<UserChildAnswer> userChildAnswers;
 
-    public UserChildAnswerRequest(Long id, ParentType parentType, List<UserChildAnswer> userChildAnswer) {
+    public UserChildAnswerRequest(Long id, ParentType parentType, List<UserChildAnswer> userChildAnswers) {
         this.id = id;
         this.parentType = parentType;
-        this.userChildAnswer = userChildAnswer;
+        this.userChildAnswers = userChildAnswers;
     }
 }
