@@ -34,6 +34,12 @@ public class User {
     @NotNull
     private String uri;
 
+    public boolean isParentAnswerNull() {
+        return userQuestions.stream()
+                .map(UserQuestion::getParentAnswer)
+                .anyMatch(Objects::isNull);
+    }
+
     public boolean isScoreNull() {
         return userQuestions.stream()
                 .map(u -> u.getParentAnswer().getScore())

@@ -32,9 +32,20 @@ public class UserService {
 
         User user = checkUserNullAndGetUser(optionalUser);
         checkMadeQuestion(user);
-        checkScoreNull(user);
+        checkParentAnswered(user);
 
         return user.getTotalScore();
+    }
+
+    public User confirmResult(Long userId, ParentType parentType) {
+
+        Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
+
+        User user = checkUserNullAndGetUser(optionalUser);
+        checkMadeQuestion(user);
+        checkParentAnswered(user);
+
+        return user;
     }
 
     private User checkUserNullAndGetUser(Optional<User> user) {
@@ -44,7 +55,10 @@ public class UserService {
         throw new UserException(UserExceptionGroup.USER_NULL);
     }
 
-    private void checkScoreNull(User user) {
+    private void checkParentAnswered(User user) {
+        if (user.isParentAnswerNull()) {
+            throw new UserException(UserExceptionGroup.USER_SCORE_NULL);
+        }
         if (user.isScoreNull()) {
             throw new UserException(UserExceptionGroup.USER_SCORE_NULL);
         }
@@ -118,5 +132,4 @@ public class UserService {
             userQuestionByQuestionId.updateUserQuestionWithParentAnswer(userParentAnswer.getScore());
         }
     }
-
 }

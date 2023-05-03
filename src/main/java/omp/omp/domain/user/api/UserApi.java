@@ -2,10 +2,8 @@ package omp.omp.domain.user.api;
 
 import lombok.RequiredArgsConstructor;
 import omp.omp.domain.user.application.UserService;
-import omp.omp.domain.user.dto.UserChildAnswerRequest;
-import omp.omp.domain.user.dto.UserParentAnswerRequest;
-import omp.omp.domain.user.dto.UserScoreRequest;
-import omp.omp.domain.user.dto.UserScoreResponse;
+import omp.omp.domain.user.domain.User;
+import omp.omp.domain.user.dto.*;
 import omp.omp.global.util.Result;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +18,15 @@ public class UserApi {
 
         UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(userScoreRequest.getId(), userScoreRequest.getParentType()));
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userScoreResponse);
+    }
+
+    @PostMapping("/api/v1/user/result")
+    public Result<UserResultResponse> confirmResult(@RequestBody UserResultRequest userResultRequest) {
+
+        User user = userService.confirmResult(userResultRequest.getId(), userResultRequest.getParentType());
+
+        UserResultResponse userResultResponse = new UserResultResponse(user);
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userResultResponse);
     }
 
     @PostMapping("/api/v1/child/answer")
