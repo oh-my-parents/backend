@@ -6,6 +6,7 @@ import omp.omp.domain.user.application.UserService;
 import omp.omp.domain.user.domain.User;
 import omp.omp.domain.user.dto.*;
 import omp.omp.global.util.Result;
+import omp.omp.global.util.SecurityUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -30,6 +31,28 @@ public class UserApi {
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, tokenResponse);
     }
 
+    @PatchMapping("/api/v1/user/name")
+    public Result<?> updateUserName(@RequestBody UpdateUserNameRequest updateUserNameRequest) {
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        System.out.println(currentUserId);
+        userService.updateUserName(currentUserId, updateUserNameRequest.getName());
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
+    }
+
+    @GetMapping("/api/v1/user/name")
+    public Result<String> findUserName() {
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        String userName = userService.findUserName(currentUserId);
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userName);
+    }
+
+    @DeleteMapping("/api/v1/user")
+    public Result<?> deleteUser() {
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        userService.deleteUser(currentUserId);
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
+    }
+
 //    @PostMapping("/login")
 //    public TokenResponse signIn(@RequestBody UserSignInRequest userSignInRequest) {
 //        String id = userSignInRequest.getId();
@@ -45,7 +68,9 @@ public class UserApi {
 
     @PostMapping("/test2")
     public String test2() {
-        return "success2";
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        System.out.println(currentUserId);
+        return currentUserId;
     }
 
     @PostMapping("/api/v1/user/result")

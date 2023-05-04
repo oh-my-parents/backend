@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import omp.omp.domain.userquestion.domain.UserQuestion;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -153,6 +154,26 @@ public class UserService {
             UserQuestion userQuestionByQuestionId = user.findUserQuestionByQuestionId((long) userParentAnswer.getNumber());
             userQuestionByQuestionId.updateUserQuestionWithParentAnswer(userParentAnswer.getScore());
         }
+    }
+
+    @Transactional
+    public void updateUserName(String id, String name) {
+        Optional<User> byId = userRepository.findById(id);
+        User user = byId.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        user.updateUserName(name);
+    }
+
+    public String findUserName(String id) {
+        Optional<User> byId = userRepository.findById(id);
+        User user = byId.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        return user.getName();
+    }
+
+    @Transactional
+    public void deleteUser(String id) {
+        Optional<User> byId = userRepository.findById(id);
+        User user = byId.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        userRepository.delete(user);
     }
 
 }

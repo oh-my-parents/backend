@@ -58,7 +58,7 @@ public class JwtTokenProvider {
         return TokenResponse.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+//                .refreshToken(refreshToken)
                 .build();
     }
 

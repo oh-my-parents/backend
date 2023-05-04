@@ -114,4 +114,8 @@ public class User implements UserDetails {
                 .orElseThrow(() -> new UserException(UserExceptionGroup.USER_QUESTION_NULL));
     }
 
+    public void updateUserName(String name) {
+        this.name = name;
+    }
+
 }
