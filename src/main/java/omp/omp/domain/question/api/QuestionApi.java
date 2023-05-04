@@ -2,7 +2,9 @@ package omp.omp.domain.question.api;
 
 import lombok.RequiredArgsConstructor;
 import omp.omp.domain.question.application.QuestionService;
+import omp.omp.domain.question.domain.Question;
 import omp.omp.domain.question.dto.QuestionRequest;
+import omp.omp.domain.question.dto.QuestionResponse;
 import omp.omp.global.util.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +18,11 @@ public class QuestionApi {
     private final QuestionService questionService;
 
     @GetMapping("api/v1/question")
-    public Result<List<String>> findQuestionsWithParent(QuestionRequest questionRequest) {
+    public Result<QuestionResponse> findQuestionsWithParent(QuestionRequest questionRequest) {
 
-        List<String> questionContents = questionService.findQuestionContentsWithParent(questionRequest.getParentType());
+        List<Question> questions = questionService.findQuestionContentsWithParent(questionRequest.getParentType());
+        QuestionResponse questionResponse = new QuestionResponse(questions);
 
-        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, questionContents);
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, questionResponse);
     }
 }
