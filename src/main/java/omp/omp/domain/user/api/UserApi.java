@@ -9,8 +9,6 @@ import omp.omp.global.util.Result;
 import omp.omp.global.util.SecurityUtil;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequiredArgsConstructor
 public class UserApi {
@@ -21,7 +19,7 @@ public class UserApi {
     @PostMapping("/api/v1/user/score")
     public Result<UserScoreResponse> confirmScore(@RequestBody UserScoreRequest userScoreRequest) {
 
-        UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(userScoreRequest.getId(), userScoreRequest.getParentType()));
+        UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(SecurityUtil.getCurrentUserId(), userScoreRequest.getParentType()));
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userScoreResponse);
     }
 
@@ -32,7 +30,7 @@ public class UserApi {
     }
 
     @PatchMapping("/api/v1/user/name")
-    public Result<?> updateUserName(@RequestBody UpdateUserNameRequest updateUserNameRequest) {
+    public Result<String> updateUserName(@RequestBody UpdateUserNameRequest updateUserNameRequest) {
         String currentUserId = SecurityUtil.getCurrentUserId();
         System.out.println(currentUserId);
         userService.updateUserName(currentUserId, updateUserNameRequest.getName());
@@ -47,7 +45,7 @@ public class UserApi {
     }
 
     @DeleteMapping("/api/v1/user")
-    public Result<?> deleteUser() {
+    public Result<String> deleteUser() {
         String currentUserId = SecurityUtil.getCurrentUserId();
         userService.deleteUser(currentUserId);
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
@@ -76,7 +74,7 @@ public class UserApi {
     @PostMapping("/api/v1/user/result")
     public Result<UserResultResponse> confirmResult(@RequestBody UserResultRequest userResultRequest) {
 
-        User user = userService.confirmResult(userResultRequest.getId(), userResultRequest.getParentType());
+        User user = userService.confirmResult(SecurityUtil.getCurrentUserId(), userResultRequest.getParentType());
 
         UserResultResponse userResultResponse = new UserResultResponse(user);
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userResultResponse);
@@ -85,14 +83,14 @@ public class UserApi {
     @PostMapping("/api/v1/child/answer")
     public Result<String> saveChildAnswer(@RequestBody UserChildAnswerRequest userChildAnswerRequest) {
 
-        String resultId = userService.saveChildAnswer(userChildAnswerRequest.getId(), userChildAnswerRequest.getParentType(), userChildAnswerRequest.getUserChildAnswers());
-        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, resultId);
+        userService.saveChildAnswer(SecurityUtil.getCurrentUserId(), userChildAnswerRequest.getParentType(), userChildAnswerRequest.getUserChildAnswers());
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
 
     @PostMapping("/api/v1/parent/answer")
     public Result<String> saveParentAnswer(@RequestBody UserParentAnswerRequest userParentAnswerRequest) {
 
-        String resultId = userService.saveParentAnswer(userParentAnswerRequest.getId(), userParentAnswerRequest.getParentType(), userParentAnswerRequest.getUserParentAnswers());
-        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, resultId);
+        userService.saveParentAnswer(SecurityUtil.getCurrentUserId(), userParentAnswerRequest.getParentType(), userParentAnswerRequest.getUserParentAnswers());
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
 }
