@@ -169,4 +169,11 @@ public class UserService {
         return user.getName();
     }
 
+    @Transactional
+    public void deleteUser(String id) {
+        Optional<User> byId = userRepository.findById(id);
+        User user = byId.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        userRepository.delete(user);
+    }
+
 }

@@ -51,4 +51,8 @@ public class UserRepository {
                 .getResultList();
         return result.stream().findAny();
     }
+
+    public void delete(User user) {
+        em.remove(user);
+    }
 }

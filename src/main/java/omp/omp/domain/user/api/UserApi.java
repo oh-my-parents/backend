@@ -31,7 +31,7 @@ public class UserApi {
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, tokenResponse);
     }
 
-    @PutMapping("/api/v1/user/name")
+    @PatchMapping("/api/v1/user/name")
     public Result<?> updateUserName(@RequestBody UpdateUserNameRequest updateUserNameRequest) {
         String currentUserId = SecurityUtil.getCurrentUserId();
         System.out.println(currentUserId);
@@ -44,6 +44,13 @@ public class UserApi {
         String currentUserId = SecurityUtil.getCurrentUserId();
         String userName = userService.findUserName(currentUserId);
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userName);
+    }
+
+    @DeleteMapping("/api/v1/user")
+    public Result<?> deleteUser() {
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        userService.deleteUser(currentUserId);
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
 
 //    @PostMapping("/login")
