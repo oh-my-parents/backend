@@ -8,11 +8,11 @@ import java.util.List;
 @Data
 public class UserChildAnswerRequest {
 
-    Long id;
+    String id;
     ParentType parentType;
     List<UserChildAnswer> userChildAnswers;
 
-    public UserChildAnswerRequest(Long id, ParentType parentType, List<UserChildAnswer> userChildAnswers) {
+    public UserChildAnswerRequest(String id, ParentType parentType, List<UserChildAnswer> userChildAnswers) {
         this.id = id;
         this.parentType = parentType;
         this.userChildAnswers = userChildAnswers;
