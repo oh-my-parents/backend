@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,24 +17,9 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    @Transactional
-    public Long makeQuestion(String content, Long orderNumber) {
-        Question question = Question.builder()
-                .content(content)
-                .id(orderNumber)
-                .build();
+    public List<Question> findQuestionContentsWithParent(ParentType parentType) {
 
-        questionRepository.save(question);
-
-        return question.getId();
-    }
-
-    public List<String> findQuestionContentsWithParent(ParentType parentType) {
-        List<Question> questions = findSortedQuestion();
-
-        return questions.stream()
-                .map(m -> m.plusParentType(parentType))
-                .collect(Collectors.toList());
+        return findSortedQuestion();
     }
 
     public List<Question> findSortedQuestion() {

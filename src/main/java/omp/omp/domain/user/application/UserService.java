@@ -33,7 +33,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final QuestionService questionService;
 
-    public int confirmScore(Long userId, ParentType parentType) {
+    public int confirmScore(String userId, ParentType parentType) {
 
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
 
@@ -44,7 +44,7 @@ public class UserService {
         return user.getTotalScore();
     }
 
-    public User confirmResult(Long userId, ParentType parentType) {
+    public User confirmResult(String userId, ParentType parentType) {
 
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
 
@@ -94,7 +94,7 @@ public class UserService {
     }
 
     @Transactional
-    public String  saveChildAnswer(Long userId, ParentType parentType, List<UserChildAnswer> userChildAnswers) {
+    public String  saveChildAnswer(String userId, ParentType parentType, List<UserChildAnswer> userChildAnswers) {
 
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
@@ -135,7 +135,7 @@ public class UserService {
     }
 
     @Transactional
-    public String saveParentAnswer(Long userId, ParentType parentType, List<UserParentAnswer> userParentAnswers) {
+    public String saveParentAnswer(String userId, ParentType parentType, List<UserParentAnswer> userParentAnswers) {
 
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
