@@ -2,7 +2,6 @@ package omp.omp.global.config;
 
 import org.springdoc.core.GroupedOpenApi;
 import org.springdoc.core.customizers.OpenApiCustomiser;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,12 +15,12 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 public class SwaggerConfig {
 
     @Bean
-    public GroupedOpenApi SecurityGroupOpenApi(@Value("${spring.profiles.active}") String active) {
+    public GroupedOpenApi SecurityGroupOpenApi() {
         return GroupedOpenApi
                 .builder()
                 .group("Security Open Api")
                 //.pathsToExclude("/auth/*", "/")
-                .addOpenApiCustomiser(buildSecurityOpenApi(active))
+                .addOpenApiCustomiser(buildSecurityOpenApi())
                 .build();
     }
 
@@ -34,7 +33,7 @@ public class SwaggerConfig {
 //                .build();
 //    }
 
-    public OpenApiCustomiser buildSecurityOpenApi(String active) {
+    public OpenApiCustomiser buildSecurityOpenApi() {
         SecurityScheme securityScheme = new SecurityScheme()
                 .name("Authorization")
                 .type(SecurityScheme.Type.HTTP)
