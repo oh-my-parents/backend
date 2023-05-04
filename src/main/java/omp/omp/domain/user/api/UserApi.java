@@ -6,6 +6,7 @@ import omp.omp.domain.user.application.UserService;
 import omp.omp.domain.user.domain.User;
 import omp.omp.domain.user.dto.*;
 import omp.omp.global.util.Result;
+import omp.omp.global.util.SecurityUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -45,7 +46,9 @@ public class UserApi {
 
     @PostMapping("/test2")
     public String test2() {
-        return "success2";
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        System.out.println(currentUserId);
+        return currentUserId;
     }
 
     @PostMapping("/api/v1/user/result")
