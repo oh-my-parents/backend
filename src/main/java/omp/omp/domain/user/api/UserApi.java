@@ -31,6 +31,14 @@ public class UserApi {
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, tokenResponse);
     }
 
+    @PutMapping("/api/v1/user/name")
+    public Result<?> updateUserName(@RequestBody UpdateUserNameRequest updateUserNameRequest) {
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        System.out.println(currentUserId);
+        userService.updateUserName(currentUserId, updateUserNameRequest.getName());
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
+    }
+
 //    @PostMapping("/login")
 //    public TokenResponse signIn(@RequestBody UserSignInRequest userSignInRequest) {
 //        String id = userSignInRequest.getId();
