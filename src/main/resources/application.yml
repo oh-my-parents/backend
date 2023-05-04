@@ -17,6 +17,10 @@ spring:
       max-file-size: 10MB
       max-request-size: 20MB
 
+  profiles:
+    active: local
+
+
 logging: #로그 레벨을 정하는 것
   level:
     org.hibernate.SQL: debug #JPA 하이버네이트가 생성하는 SQL이 다 보인다
