@@ -18,7 +18,8 @@ public class QuestionRepository {
     }
 
     public List<Question> findAll() {
-        return em.createQuery("select q from Question q", Question.class)
+        return em.createQuery("select distinct q from Question q" +
+                        " left join fetch q.choices c", Question.class)
                 .getResultList();
     }
 }
