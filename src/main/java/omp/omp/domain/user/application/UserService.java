@@ -5,16 +5,13 @@ import omp.omp.domain.question.application.QuestionService;
 import omp.omp.domain.question.domain.Question;
 import omp.omp.domain.user.dao.UserRepository;
 import omp.omp.domain.user.domain.User;
-import omp.omp.domain.user.dto.TokenResponse;
 import omp.omp.domain.user.dto.UserChildAnswer;
 import omp.omp.domain.user.dto.UserParentAnswer;
 import omp.omp.domain.user.exception.UserException;
 import omp.omp.domain.user.exception.UserExceptionGroup;
 import omp.omp.domain.user.jwt.JwtTokenProvider;
 import omp.omp.domain.userquestion.domain.ParentType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import omp.omp.domain.userquestion.domain.UserQuestion;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -145,6 +142,17 @@ public class UserService {
         }
 
         return user.getId();
+    }
+
+    public User findQuestionWithChildAnswer(String userId, ParentType parentType) {
+
+        Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
+
+        User user = checkUserNullAndGetUser(optionalUser);
+        checkMadeQuestion(user);
+
+        return user;
+
     }
 
     private void updateUserQuestionWithParentAnswer(List<UserParentAnswer> userParentAnswers, User user) {

@@ -93,4 +93,14 @@ public class UserApi {
         userService.saveParentAnswer(SecurityUtil.getCurrentUserId(), userParentAnswerRequest.getParentType(), userParentAnswerRequest.getUserParentAnswers());
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
+
+    @PostMapping("/api/v1/question/child/answer")
+    public Result<UserQuestionWithChildAnswerResponse> findQuestionWithChildAnswer(@RequestBody UserQuestionWithChildAnswerRequest userQuestionWithChildAnswerRequest) {
+
+        UserQuestionWithChildAnswerResponse userQuestionWithChildAnswerResponse = new UserQuestionWithChildAnswerResponse(
+                userService.findQuestionWithChildAnswer(SecurityUtil.getCurrentUserId()
+                        , userQuestionWithChildAnswerRequest.getParentType()));
+
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userQuestionWithChildAnswerResponse);
+    }
 }
