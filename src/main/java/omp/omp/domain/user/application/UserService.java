@@ -160,8 +160,13 @@ public class UserService {
     public void updateUserName(String id, String name) {
         Optional<User> byId = userRepository.findById(id);
         User user = byId.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
-        System.out.println(user.getName());
         user.updateUserName(name);
+    }
+
+    public String findUserName(String id) {
+        Optional<User> byId = userRepository.findById(id);
+        User user = byId.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        return user.getName();
     }
 
 }

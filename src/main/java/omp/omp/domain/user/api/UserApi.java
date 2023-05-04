@@ -39,6 +39,13 @@ public class UserApi {
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
 
+    @GetMapping("/api/v1/user/name")
+    public Result<String> findUserName() {
+        String currentUserId = SecurityUtil.getCurrentUserId();
+        String userName = userService.findUserName(currentUserId);
+        return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userName);
+    }
+
 //    @PostMapping("/login")
 //    public TokenResponse signIn(@RequestBody UserSignInRequest userSignInRequest) {
 //        String id = userSignInRequest.getId();
