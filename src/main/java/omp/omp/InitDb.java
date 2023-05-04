@@ -2,11 +2,12 @@ package omp.omp;
 
 import lombok.RequiredArgsConstructor;
 import omp.omp.domain.question.application.QuestionGroup;
-import omp.omp.domain.question.application.QuestionService;
+import omp.omp.domain.question.domain.Question;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
 
 @Component
 @RequiredArgsConstructor
@@ -24,11 +25,12 @@ public class InitDb {
     @RequiredArgsConstructor
     static class InitService {
 
-        private final QuestionService questionService;
+        private final EntityManager em;
 
         public void dbQuestion() {
             for (QuestionGroup questionGroup : QuestionGroup.values()) {
-                questionService.makeQuestion(questionGroup.getMessage(), questionGroup.getOrder());
+                Question question = Question.createQuestionByQuestionGroup(questionGroup);
+                em.persist(question);
             }
         }
     }

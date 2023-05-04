@@ -22,11 +22,11 @@ public class UserRepository {
         em.persist(user);
     }
 
-    public User findOne(Long id) {
+    public User findOne(String id) {
         return em.find(User.class, id);
     }
 
-    public Optional<User> findByParentType(Long id, ParentType parentType) {
+    public Optional<User> findByParentType(String id, ParentType parentType) {
         List<User> result = em.createQuery("select u from User u" +
                         " left join u.userQuestions uq" +
                         " on uq.parentType = :parentType" +
