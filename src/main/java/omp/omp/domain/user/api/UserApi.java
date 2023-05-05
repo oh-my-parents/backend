@@ -80,25 +80,25 @@ public class UserApi {
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userResultResponse);
     }
 
-    @PostMapping("/api/v1/child/answer")
+    @PostMapping("/api/v1/user/child/answer")
     public Result<String> saveChildAnswer(@RequestBody UserChildAnswerRequest userChildAnswerRequest) {
 
         userService.saveChildAnswer(SecurityUtil.getCurrentUserId(), userChildAnswerRequest.getParentType(), userChildAnswerRequest.getUserChildAnswers());
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
 
-    @PostMapping("/api/v1/parent/answer")
+    @PostMapping("/api/v1/user/parent/answer")
     public Result<String> saveParentAnswer(@RequestBody UserParentAnswerRequest userParentAnswerRequest) {
 
         userService.saveParentAnswer(SecurityUtil.getCurrentUserId(), userParentAnswerRequest.getParentType(), userParentAnswerRequest.getUserParentAnswers());
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
 
-    @PostMapping("/api/v1/question/child/answer")
+    @PostMapping("/api/v1/user/parent/question")
     public Result<UserQuestionWithChildAnswerResponse> findQuestionWithChildAnswer(@RequestBody UserQuestionWithChildAnswerRequest userQuestionWithChildAnswerRequest) {
 
         UserQuestionWithChildAnswerResponse userQuestionWithChildAnswerResponse = new UserQuestionWithChildAnswerResponse(
-                userService.findQuestionWithChildAnswer(SecurityUtil.getCurrentUserId()
+                userService.findQuestionWithChildAnswer(userQuestionWithChildAnswerRequest.getId()
                         , userQuestionWithChildAnswerRequest.getParentType()));
 
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userQuestionWithChildAnswerResponse);
