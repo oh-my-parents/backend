@@ -20,8 +20,8 @@ public class QuestionApi {
     @GetMapping("api/v1/question")
     public Result<QuestionResponse> findQuestionsWithParent(QuestionRequest questionRequest) {
 
-        List<Question> questions = questionService.findQuestionContentsWithParent(questionRequest.getParentType());
-        QuestionResponse questionResponse = new QuestionResponse(questions);
+        List<Question> questions = questionService.findSortedQuestion();
+        QuestionResponse questionResponse = new QuestionResponse(questions, questionRequest.getParentType());
 
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, questionResponse);
     }
