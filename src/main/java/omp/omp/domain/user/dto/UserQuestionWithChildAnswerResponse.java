@@ -13,12 +13,15 @@ public class UserQuestionWithChildAnswerResponse {
 
     private String name;
 
+    private boolean isAnswered;
+
     public UserQuestionWithChildAnswerResponse(User user) {
 
         this.name = user.getName();
+        isAnswered = !user.isParentAnswerNull() && !user.isScoreNull();
 
         this.userQuestionWithChildAnswers = user.getUserQuestions().stream()
-                .map(UserQuestionWithChildAnswer::new)
+                .map(uqca -> new UserQuestionWithChildAnswer(uqca, isAnswered))
                 .collect(Collectors.toList());
     }
 }
