@@ -90,7 +90,7 @@ public class UserApi {
     @PostMapping("/api/v1/user/parent/answer")
     public Result<String> saveParentAnswer(@RequestBody UserParentAnswerRequest userParentAnswerRequest) {
 
-        userService.saveParentAnswer(SecurityUtil.getCurrentUserId(), userParentAnswerRequest.getParentType(), userParentAnswerRequest.getUserParentAnswers());
+        userService.saveParentAnswer(userParentAnswerRequest.getId(), userParentAnswerRequest.getParentType(), userParentAnswerRequest.getUserParentAnswers());
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
 

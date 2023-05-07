@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class UserParentAnswerRequest {
 
+    String id;
     ParentType parentType;
     List<UserParentAnswer> userParentAnswers;
 
