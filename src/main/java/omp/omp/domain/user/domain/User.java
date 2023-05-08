@@ -107,8 +107,11 @@ public class User implements UserDetails {
         return true;
     }
 
-    public boolean isMadeUserQuestion() {
-        return userQuestions.size() != 0;
+    public boolean isMadeUserQuestion(ParentType parentType) {
+        long size = userQuestions.stream()
+                .filter(uq -> uq.getParentType().equals(parentType))
+                .count();
+        return size != 0;
     }
 
     public boolean isMadeUserQuestionWithParentType(ParentType parentType) {

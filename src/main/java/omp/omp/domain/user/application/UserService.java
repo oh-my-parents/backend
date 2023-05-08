@@ -36,7 +36,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
 
         User user = checkUserNullAndGetUser(optionalUser);
-        checkMadeQuestion(user);
+        checkMadeQuestion(user, parentType);
         checkParentAnsweredWithParentType(user, parentType);
 
         return new UserScoreResponse(user.getName(), user.getTotalScore(parentType));
@@ -47,7 +47,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
 
         User user = checkUserNullAndGetUser(optionalUser);
-        checkMadeQuestion(user);
+        checkMadeQuestion(user, parentType);
         checkParentAnsweredWithParentType(user, parentType);
 
         return user;
@@ -85,8 +85,8 @@ public class UserService {
 //        return tokenInfo;
 //    }
 
-    private void checkMadeQuestion(User user) {
-        if (!user.isMadeUserQuestion()) {
+    private void checkMadeQuestion(User user, ParentType parentType) {
+        if (!user.isMadeUserQuestion(parentType)) {
             throw new UserException(UserExceptionGroup.USER_QUESTION_NULL);
         }
     }
@@ -97,7 +97,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
 
-        if (user.isMadeUserQuestion() && user.isMadeUserQuestionWithParentType(parentType)) {
+        if (user.isMadeUserQuestion(parentType) && user.isMadeUserQuestionWithParentType(parentType)) {
             updateUserQuestionWithChildAnswer(userChildAnswers, user, parentType);
         } else {
             List<Question> questions = questionService.findSortedQuestion();
@@ -138,7 +138,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
 
-        if (user.isMadeUserQuestion() && user.isMadeUserQuestionWithParentType(parentType)) {
+        if (user.isMadeUserQuestion(parentType) && user.isMadeUserQuestionWithParentType(parentType)) {
             updateUserQuestionWithParentAnswer(userParentAnswers, user, parentType);
         }
 
@@ -150,7 +150,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
 
         User user = checkUserNullAndGetUser(optionalUser);
-        checkMadeQuestion(user);
+        checkMadeQuestion(user, parentType);
 
         return user;
 
