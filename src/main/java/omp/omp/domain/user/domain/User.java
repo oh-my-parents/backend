@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import omp.omp.domain.user.exception.UserException;
 import omp.omp.domain.user.exception.UserExceptionGroup;
+import omp.omp.domain.userquestion.domain.ParentType;
 import omp.omp.domain.userquestion.domain.UserQuestion;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -107,9 +108,14 @@ public class User implements UserDetails {
         return userQuestions.size() != 0;
     }
 
-    public UserQuestion findUserQuestionByQuestionId(Long id) {
+    public boolean isMadeUserQuestionWithParentType(ParentType parentType) {
         return userQuestions.stream()
-                .filter(uq -> uq.getQuestion().getId() == id)
+                .anyMatch(uq -> uq.getParentType().equals(parentType));
+    }
+
+    public UserQuestion findUserQuestionByQuestionId(Long id, ParentType parentType) {
+        return userQuestions.stream()
+                .filter(uq -> uq.getQuestion().getId() == id && uq.getParentType().equals(parentType))
                 .findFirst()
                 .orElseThrow(() -> new UserException(UserExceptionGroup.USER_QUESTION_NULL));
     }

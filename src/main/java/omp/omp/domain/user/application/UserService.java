@@ -96,8 +96,8 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
 
-        if (user.isMadeUserQuestion()) {
-            updateUserQuestionWithChildAnswer(userChildAnswers, user);
+        if (user.isMadeUserQuestion() && user.isMadeUserQuestionWithParentType(parentType)) {
+            updateUserQuestionWithChildAnswer(userChildAnswers, user, parentType);
         } else {
             List<Question> questions = questionService.findSortedQuestion();
             createUserQuestionWithChildAnswer(parentType, userChildAnswers, user, questions, user.getUserQuestions());
@@ -115,11 +115,11 @@ public class UserService {
         }
     }
 
-    private void updateUserQuestionWithChildAnswer(List<UserChildAnswer> userChildAnswers, User user) {
+    private void updateUserQuestionWithChildAnswer(List<UserChildAnswer> userChildAnswers, User user, ParentType parentType) {
         // UserQuestion 업데이트
         for (UserChildAnswer userChildAnswer : userChildAnswers) {
 
-            UserQuestion userQuestionByQuestionId = user.findUserQuestionByQuestionId((long) userChildAnswer.getNumber());
+            UserQuestion userQuestionByQuestionId = user.findUserQuestionByQuestionId((long) userChildAnswer.getNumber(), parentType);
             userQuestionByQuestionId.updateUserQuestionWithChildAnswer(userChildAnswer.getAnswer());
         }
     }
@@ -137,8 +137,8 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
         User user = checkUserNullAndGetUser(optionalUser);
 
-        if (user.isMadeUserQuestion()) {
-            updateUserQuestionWithParentAnswer(userParentAnswers, user);
+        if (user.isMadeUserQuestion() && user.isMadeUserQuestionWithParentType(parentType)) {
+            updateUserQuestionWithParentAnswer(userParentAnswers, user, parentType);
         }
 
         return user.getId();
@@ -155,11 +155,11 @@ public class UserService {
 
     }
 
-    private void updateUserQuestionWithParentAnswer(List<UserParentAnswer> userParentAnswers, User user) {
+    private void updateUserQuestionWithParentAnswer(List<UserParentAnswer> userParentAnswers, User user, ParentType parentType) {
         // UserQuestion 업데이트
         for (UserParentAnswer userParentAnswer : userParentAnswers) {
 
-            UserQuestion userQuestionByQuestionId = user.findUserQuestionByQuestionId((long) userParentAnswer.getNumber());
+            UserQuestion userQuestionByQuestionId = user.findUserQuestionByQuestionId((long) userParentAnswer.getNumber(), parentType);
             userQuestionByQuestionId.updateUserQuestionWithParentAnswer(userParentAnswer.getScore());
         }
     }
