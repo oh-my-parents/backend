@@ -21,7 +21,7 @@ on:
 
 env:
   PROJECT_ID: oh-my-parents
-  GCE_INSTANCE: oh-my-parents-backend # TODO: update to instance name
+  GCE_INSTANCE: be-test # TODO: update to instance name
   GCE_INSTANCE_ZONE: asia-northeast3-a # TODO: update to instance zone
           
 jobs:
