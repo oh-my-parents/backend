@@ -46,6 +46,7 @@ public class UserRepository {
 
     public Optional<User> findById(String username) {
         List<User> result = em.createQuery("select u from User u" +
+                        " join fetch u.userQuestions uq" +
                         " where u.id = :username", User.class)
                 .setParameter("username", username)
                 .getResultList();
