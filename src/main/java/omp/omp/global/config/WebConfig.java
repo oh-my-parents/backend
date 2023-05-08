@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private static final String CORS_URL_PATTERN = "/**";
 
-    private static final String CORS_URL = "https://my-parents.day, https://api.my-parents.day, http://localhost:80, http://localhost:3000";
+    private static final String CORS_URL = "https://my-parents.day, https://api.my-parents.day, http://my-parents.day, http://api.my-parents.day, http://localhost:80, http://localhost:3000";
     private static final String CORS_METHOD = "*";
 
     /**
