@@ -48,21 +48,24 @@ public class User implements UserDetails {
 
     private String uri;
 
-    public boolean isParentAnswerNull() {
+    public boolean isParentAnswerNull(ParentType parentType) {
         return userQuestions.stream()
+                .filter(uq -> uq.getParentType().equals(parentType))
                 .map(UserQuestion::getParentAnswer)
                 .anyMatch(Objects::isNull);
     }
 
-    public boolean isScoreNull() {
+    public boolean isScoreNull(ParentType parentType) {
         return userQuestions.stream()
+                .filter(uq -> uq.getParentType().equals(parentType))
                 .map(u -> u.getParentAnswer().getScore())
                 .anyMatch(Objects::isNull);
     }
 
-    public int getTotalScore() {
+    public int getTotalScore(ParentType parentType) {
         return userQuestions.stream()
-                .mapToInt(u -> u.getParentAnswer().getScore())
+                .filter(uq -> uq.getParentType().equals(parentType))
+                .mapToInt(uq -> uq.getParentAnswer().getScore())
                 .sum();
     }
 

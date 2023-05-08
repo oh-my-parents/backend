@@ -5,9 +5,11 @@ import lombok.Data;
 @Data
 public class UserScoreResponse {
 
+    private String name;
     private int score;
 
-    public UserScoreResponse(int score) {
+    public UserScoreResponse(String name, int score) {
+        this.name = name;
         this.score = score;
     }
 }

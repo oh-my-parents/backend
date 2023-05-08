@@ -17,10 +17,11 @@ public class UserResult {
 
     private int parentScore;
 
-    public UserResult(UserQuestion userQuestion) {
-        this.questionNumber = userQuestion.getQuestion().getId();
+    public UserResult(UserQuestion userQuestion, ParentType parentType) {
+
         this.parentType = userQuestion.getParentType();
         this.question = userQuestion.getQuestion().plusParentType(parentType);
+        this.questionNumber = userQuestion.getQuestion().getId();
         this.childAnswer = userQuestion.getChildAnswer().getChildContent();
         this.parentScore = userQuestion.getParentAnswer().getScore();
     }

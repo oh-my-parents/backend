@@ -8,7 +8,4 @@ public class UserScoreRequest {
 
     private ParentType parentType;
 
-    public UserScoreRequest(ParentType parentType) {
-        this.parentType = parentType;
-    }
 }

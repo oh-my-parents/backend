@@ -18,9 +18,10 @@ public class UserQuestionWithChildAnswer {
     private int score;
 
 
-    public UserQuestionWithChildAnswer(UserQuestion userQuestion, boolean isAnswered) {
-        this.questionNumber = userQuestion.getQuestion().getId();
+    public UserQuestionWithChildAnswer(UserQuestion userQuestion, boolean isAnswered, ParentType parentType) {
+
         this.parentType = userQuestion.getParentType();
+        this.questionNumber = userQuestion.getQuestion().getId();
         this.question = userQuestion.getQuestion().plusParentType(parentType);
         this.childAnswer = userQuestion.getChildAnswer().getChildContent();
         if (isAnswered) {

@@ -2,6 +2,7 @@ package omp.omp.domain.user.dto;
 
 import lombok.Data;
 import omp.omp.domain.user.domain.User;
+import omp.omp.domain.userquestion.domain.ParentType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,13 +16,14 @@ public class UserQuestionWithChildAnswerResponse {
 
     private boolean isAnswered;
 
-    public UserQuestionWithChildAnswerResponse(User user) {
+    public UserQuestionWithChildAnswerResponse(User user, ParentType parentType) {
 
         this.name = user.getName();
-        isAnswered = !user.isParentAnswerNull() && !user.isScoreNull();
+        isAnswered = !user.isParentAnswerNull(parentType) && !user.isScoreNull(parentType);
 
         this.userQuestionWithChildAnswers = user.getUserQuestions().stream()
-                .map(uqca -> new UserQuestionWithChildAnswer(uqca, isAnswered))
+                .filter(uqca -> uqca.getParentType().equals(parentType))
+                .map(uqca -> new UserQuestionWithChildAnswer(uqca, isAnswered, parentType))
                 .collect(Collectors.toList());
     }
 }

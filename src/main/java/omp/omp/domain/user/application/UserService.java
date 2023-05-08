@@ -7,6 +7,7 @@ import omp.omp.domain.user.dao.UserRepository;
 import omp.omp.domain.user.domain.User;
 import omp.omp.domain.user.dto.UserChildAnswer;
 import omp.omp.domain.user.dto.UserParentAnswer;
+import omp.omp.domain.user.dto.UserScoreResponse;
 import omp.omp.domain.user.exception.UserException;
 import omp.omp.domain.user.exception.UserExceptionGroup;
 import omp.omp.domain.user.jwt.JwtTokenProvider;
@@ -30,15 +31,15 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final QuestionService questionService;
 
-    public int confirmScore(String userId, ParentType parentType) {
+    public UserScoreResponse confirmScore(String userId, ParentType parentType) {
 
         Optional<User> optionalUser = userRepository.findByParentType(userId, parentType);
 
         User user = checkUserNullAndGetUser(optionalUser);
         checkMadeQuestion(user);
-        checkParentAnswered(user);
+        checkParentAnsweredWithParentType(user, parentType);
 
-        return user.getTotalScore();
+        return new UserScoreResponse(user.getName(), user.getTotalScore(parentType));
     }
 
     public User confirmResult(String userId, ParentType parentType) {
@@ -47,7 +48,7 @@ public class UserService {
 
         User user = checkUserNullAndGetUser(optionalUser);
         checkMadeQuestion(user);
-        checkParentAnswered(user);
+        checkParentAnsweredWithParentType(user, parentType);
 
         return user;
     }
@@ -59,11 +60,11 @@ public class UserService {
         throw new UserException(UserExceptionGroup.USER_NULL);
     }
 
-    private void checkParentAnswered(User user) {
-        if (user.isParentAnswerNull()) {
+    private void checkParentAnsweredWithParentType(User user, ParentType parentType) {
+        if (user.isParentAnswerNull(parentType)) {
             throw new UserException(UserExceptionGroup.USER_SCORE_NULL);
         }
-        if (user.isScoreNull()) {
+        if (user.isScoreNull(parentType)) {
             throw new UserException(UserExceptionGroup.USER_SCORE_NULL);
         }
     }

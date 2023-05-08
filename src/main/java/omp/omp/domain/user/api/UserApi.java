@@ -19,7 +19,7 @@ public class UserApi {
     @PostMapping("/api/v1/user/score")
     public Result<UserScoreResponse> confirmScore(@RequestBody UserScoreRequest userScoreRequest) {
 
-        UserScoreResponse userScoreResponse = new UserScoreResponse(userService.confirmScore(SecurityUtil.getCurrentUserId(), userScoreRequest.getParentType()));
+        UserScoreResponse userScoreResponse = userService.confirmScore(SecurityUtil.getCurrentUserId(), userScoreRequest.getParentType());
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userScoreResponse);
     }
 
@@ -76,7 +76,7 @@ public class UserApi {
 
         User user = userService.confirmResult(SecurityUtil.getCurrentUserId(), userResultRequest.getParentType());
 
-        UserResultResponse userResultResponse = new UserResultResponse(user);
+        UserResultResponse userResultResponse = new UserResultResponse(user, userResultRequest.getParentType());
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userResultResponse);
     }
 
@@ -99,7 +99,8 @@ public class UserApi {
 
         UserQuestionWithChildAnswerResponse userQuestionWithChildAnswerResponse = new UserQuestionWithChildAnswerResponse(
                 userService.findQuestionWithChildAnswer(userQuestionWithChildAnswerRequest.getId()
-                        , userQuestionWithChildAnswerRequest.getParentType()));
+                        , userQuestionWithChildAnswerRequest.getParentType())
+                        , userQuestionWithChildAnswerRequest.getParentType());
 
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, userQuestionWithChildAnswerResponse);
     }

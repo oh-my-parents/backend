@@ -2,6 +2,7 @@ package omp.omp.domain.user.dto;
 
 import lombok.Data;
 import omp.omp.domain.user.domain.User;
+import omp.omp.domain.userquestion.domain.ParentType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,11 +14,12 @@ public class UserResultResponse {
 
     private String name;
 
-    public UserResultResponse(User user) {
+    public UserResultResponse(User user, ParentType parentType) {
         this.name = user.getName();
 
         this.userResults = user.getUserQuestions().stream()
-                .map(UserResult::new)
+                .filter(ur -> ur.getParentType().equals(parentType))
+                .map(ur -> new UserResult(ur, parentType))
                 .collect(Collectors.toList());
     }
 }
