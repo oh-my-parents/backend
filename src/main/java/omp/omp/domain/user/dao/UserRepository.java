@@ -27,12 +27,10 @@ public class UserRepository {
     }
 
     public Optional<User> findByParentType(String id, ParentType parentType) {
-        List<User> result = em.createQuery("select u from User u" +
-                        " left join u.userQuestions uq" +
-                        " on uq.parentType = :parentType" +
+        List<User> result = em.createQuery("select distinct u from User u" +
+                        " left join fetch u.userQuestions uq" +
                         " where u.id = :id", User.class)
                 .setParameter("id", id)
-                .setParameter("parentType", parentType)
                 .getResultList();
 
         return result.stream().findAny();
