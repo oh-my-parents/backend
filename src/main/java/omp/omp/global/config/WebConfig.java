@@ -21,6 +21,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping(CORS_URL_PATTERN)
                 .allowedOrigins(CORS_URL)
-                .allowedMethods(CORS_METHOD);
+                .allowedMethods(CORS_METHOD)
+                .allowedHeaders("*") // 어떤 헤더들을 허용할 것인지
+                .allowCredentials(true); // 쿠키 요청을 허용한다(다른 도메인 서버에 인증하는 경우에만 사용해야하며, true 설정시 보안상 이슈가 발생할 수 있다)
     }
 }
