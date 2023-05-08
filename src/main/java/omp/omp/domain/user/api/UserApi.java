@@ -32,7 +32,7 @@ public class UserApi {
     @PatchMapping("/api/v1/user/name")
     public Result<String> updateUserName(@RequestBody UpdateUserNameRequest updateUserNameRequest) {
         String currentUserId = SecurityUtil.getCurrentUserId();
-        System.out.println(currentUserId);
+        //System.out.println(currentUserId);
         userService.updateUserName(currentUserId, updateUserNameRequest.getName());
         return new Result<>(Result.CODE_SUCCESS, Result.MESSAGE_OK, null);
     }
@@ -67,7 +67,7 @@ public class UserApi {
     @PostMapping("/test2")
     public String test2() {
         String currentUserId = SecurityUtil.getCurrentUserId();
-        System.out.println(currentUserId);
+//        System.out.println(currentUserId);
         return currentUserId;
     }
 

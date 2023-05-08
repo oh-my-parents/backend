@@ -67,7 +67,7 @@ public class KakaoUserService {
         } else {
             //카카오를 통해 처음 회원가입하는 유저인 경우, 회원가입 로직 진행 후 JWT 발급!
             String id = signUpByKakao(kakaoResponse);
-            System.out.println(id);
+//            System.out.println(id);
             //위 id가 방금 회원가입하고 나서 얻은 User의 id이다.
 
             // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
@@ -116,7 +116,7 @@ public class KakaoUserService {
                 throw new KakaoUserException(KakaoUserExceptionGroup.KAKAO_USER_NULL);
             }
 
-            System.out.println("responseCode: " + responseCode);
+//            System.out.println("responseCode: " + responseCode);
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
@@ -125,7 +125,7 @@ public class KakaoUserService {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-            System.out.println("response body: " + result);
+//            System.out.println("response body: " + result);
 
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
@@ -140,8 +140,8 @@ public class KakaoUserService {
             kakaoResponse.put("kakaoId", kakaoId);
             kakaoResponse.put("nickname", nickname);
 
-            System.out.println("kakaoId: " + kakaoId);
-            System.out.println("nickname: " + nickname);
+//            System.out.println("kakaoId: " + kakaoId);
+//            System.out.println("nickname: " + nickname);
 
             br.close();
         } catch (IOException e) {

@@ -26,9 +26,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private UserDetails createUserDetails(omp.omp.domain.user.domain.User user) {
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
-        System.out.println(user.getRoles());
+//        System.out.println(user.getUsername());
+//        System.out.println(user.getPassword());
+//        System.out.println(user.getRoles());
 
         return User.builder()
                 .username(user.getUsername())
