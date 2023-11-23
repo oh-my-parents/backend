@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/omp?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1q2w3e4r1!
+    username: REPLACE WITH YOUR USERNAME
+    password: REPLACE WITH YOUR PASSWORD
   jpa:
     hibernate:
       ddl-auto: create #create로 하면 애플리케이션 실행 시점에 내가 가지고 있는 테이블을 다 지운 다음에 엔티티 정보를 보고 테이블을 자동으로 만들어 줌
@@ -41,4 +41,4 @@ springdoc:
   pre-loading-enabled: true
 
 jwt:
-  secret: XeQyyCaDQt45QEq833ambdWAAfvrocVdQQrhj56FMgrRB004dF
+  secret: REPLACE WITH YOUR TOKEN
